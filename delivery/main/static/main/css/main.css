@@ -1,0 +1,149 @@
+ @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Roboto:ital,wght@0,500;1,300;1,500;1,700;1,900&display=swap');
+
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.title {
+    color: #836505;
+    font-family: 'Roboto', sans-serif;
+}
+/* header */
+
+.header-img {
+    background-color: #1B191A;
+    width: 100%;
+    background-size: 100% 100%;
+}
+
+
+@media (max-width:767px){
+    .img-logo {
+      width: 200px; 
+    }
+}
+
+#offcanvasExample {
+    width: max-content;
+}
+
+.offcanvas-title {
+    font-size: medium;
+}
+
+
+/* main */
+
+.div-navigate {
+    height: 60px;
+    align-items: center;
+}
+
+.link-navigate {
+    margin: 5px;
+    color: black;
+    text-decoration: none;
+    font-size: small;
+}
+
+.cards {
+    padding: 5px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+.card {
+    height: auto;
+    padding-bottom: 2%;
+    min-width: 300px;
+    margin: 10px;
+}
+
+
+
+.card-title {
+    width: 100%;
+}
+
+.card-img {
+    width: 100%;
+    max-width: 360px;
+}
+
+.card-body {
+    width: max-content;
+}
+
+.card-name {
+    font-size: medium;
+    font-weight: 500;
+    text-align: center;
+    max-width: 300px;
+}
+
+.card-info {
+    font-size: medium;
+}
+
+.card-end {
+    width: 100%;
+    justify-content: space-around;
+}
+
+.quant {
+    border-radius: 5px;
+    align-items: center;
+    border: solid #777777 1px;
+    padding: 2%;
+    margin-right: 2%;
+}
+
+.quant-button {
+    background: none;
+    box-shadow: none;
+    border: none;
+}
+
+.main-text {
+    font-size: small;
+}
+
+.price {
+    width: 60%;
+}
+
+.dropdown-menu {
+    text-align: center;
+    border: solid black 0.5px;
+    font-size: small;
+}
+
+.card-cart {
+    width: 40%;
+}
+
+#title-cart {
+    font-size: small;
+}
+
+.promo-input {
+    background: none;
+    border: none;
+    outline: none;
+    border-bottom: solid 2px #1B191A;
+}
+
+
+@media(max-width:500px){
+    #offcanvasCart {
+        width: 80%;
+    }
+}
+
+#button-sign {
+    border-radius: 25px !important;
+}

@@ -1,0 +1,534 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главное меню</title>
+</head>
+
+<body class="bg-light">
+    <header class="header">
+        <div class="header-top d-flex bg-light mt-4">
+            <div class="container d-flex align-items-center flex-row ms-0 w-50 justify-content-between">
+                <div class="logo">
+                    <h4>Logo</h4>
+                </div>
+                <div class="timer">
+                    ДОСТАВКА (с 9:00 до 23:55)
+                </div>
+                <div class="number">
+                    +7(8352)228-061
+                </div>
+            </div>
+            <div class="right">
+                <button class="btn btn-secondary" id="button-sign">
+                    Войти
+                </button>
+            </div>
+        </div>
+
+
+        <div class="header-middle">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasCartLabel">Корзина</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="list-group">
+                        {% for item in cart_items %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div class="d-flex">
+                                    <img src="{{ MEDIA_URL }} {{  item.menu_item.image.url  }}" alt="" class="img-thumbnail me-2" />
+                                    <div>
+                                        <h6 class="mb-0 ms-2">{{ item.menu_item.title }}</h6>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <p class="mb-0">{{ item.menu_item.price }} р.</p>
+                                    <p class="mb-0 mt-0 text-muted">x {{ item.quantity }}</p>
+                                    <form method="POST" action="{% url 'remove_from_cart' item.menu_item.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm ms-2">Удалить</button>
+                                    </form>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="promo text-center mt-4">
+                        <input type="text" class="promo-input text-small" placeholder="Введите промокод">
+                    </div>
+                    <div class="buy text-center mt-2">
+                        <p>Общая стоимость: {{ cart.get_total_price }} р.</p>
+                        <button class="btn btn-dark" onclick="location.href='/order'">Заказать</button>
+                    </div>
+                </div>
+            </div>
+    
+                    
+            </div>
+            <div class="" style="z-index: 11">
+                <button class="btn btn-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
+                    aria-controls="offcanvasCart">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </button>
+            </div>
+
+    </header>
+    <div class="div-navigate d-flex flex-row bg-light justify-content-center">
+        <a href="#soup" class="link-navigate" id="soup-link">Супы</a>
+        <a href="#hot-eat" class="link-navigate">Горячие блюда</a>
+        <a href="#hamburger" class="link-navigate">Закуски</a>
+        <a href="#salad" class="link-navigate">Салаты</a>
+        <a href="#pasta" class="link-navigate">Паста</a>
+        <a href="#pizza" class="link-navigate">Пицца</a>
+        <a href="#sandwitch" class="link-navigate">Сэндвичи</a>
+        <a href="#sandwitch" class="link-navigate">Бургеры</a>
+        <a href="#desert" class="link-navigate">Десерты</a>
+        <a href="#sous" class="link-navigate">Соусы</a>
+        <a href="#drinks" class="link-navigate">Напитки</a>
+    </div>
+    <main>
+        <div>
+            <h2 class="title text-center">Закуски</h2>
+        </div>
+        <div class="cards bg-light" id="hamburger">
+            {% for item in menu_eat %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span id="quantity-{{ item.id }}" class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a id="add-to-cart-{{ item.id }}" href="{% url 'add-to-cart' item.id %}{% if quantity %}?quantity={{ quantity }}{% endif %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+        <div>
+            <h2 class="title text-center" id="salad">Салаты</h2>
+        </div>
+        <div class="cards bg-light">
+            {% for item in menu_salat %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a id="add-to-cart-{{ item.id }}" href="{% url 'add-to-cart' item.id %}{% if quantity %}?quantity={{ quantity }}{% endif %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h2 class="title text-center" id="soup">Супы</h2>
+        </div>
+        <div class="cards bg-light">
+            {% for item in menu_soup %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a id="add-to-cart-{{ item.id }}" href="{% url 'add-to-cart' item.id %}{% if quantity %}?quantity={{ quantity }}{% endif %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h2 class="title text-center" id="pizza">Пицца</h2>
+        </div>
+        <div class="cards bg-light">
+            {% for item in menu_pizza %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a id="add-to-cart-{{ item.id }}" href="{% url 'add-to-cart' item.id %}{% if quantity %}?quantity={{ quantity }}{% endif %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+        </div>
+        <div>
+            <h2 class="title text-center" id="pizza">Паста</h2>
+        </div>
+        <div class="cards bg-light">
+            {% for item in menu_pasta %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a id="add-to-cart-{{ item.id }}" href="{% url 'add-to-cart' item.id %}{% if quantity %}?quantity={{ quantity }}{% endif %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h2 class="title text-center" id="sandwitch">Сэндвичи</h2>
+        </div>
+        <div class="cards bg-light">
+            {% for item in menu_sandwitch %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a id="add-to-cart-{{ item.id }}" href="{% url 'add-to-cart' item.id %}{% if quantity %}?quantity={{ quantity }}{% endif %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h2 class="title text-center" id="hot-eat">Горячие блюда</h2>
+        </div>
+        <div class="cards bg-light">
+            {% for item in menu_hot %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a id="add-to-cart-{{ item.id }}" href="{% url 'add-to-cart' item.id %}{% if quantity %}?quantity={{ quantity }}{% endif %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h2 class="title text-center" id="desert">Десерты</h2>
+        </div>
+        <div class="cards bg-light">
+            {% for item in menu_desert %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a id="add-to-cart-{{ item.id }}" href="{% url 'add-to-cart' item.id %}{% if quantity %}?quantity={{ quantity }}{% endif %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h2 class="title text-center" id="pizza">Напитки</h2>
+        </div>
+        <div class="cards bg-light">
+            {% for item in menu_drinks %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a id="add-to-cart-{{ item.id }}" href="{% url 'add-to-cart' item.id %}{% if quantity %}?quantity={{ quantity }}{% endif %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h2 class="title text-center" id="sous">Соусы</h2>
+        </div>
+        <div class="cards bg-light">
+            {% for item in menu_sous %}
+            <div class="card">
+                <div class="card-title">
+                    <img src="{{ MEDIA_URL }} {{  item.image.url  }}" alt="" class="card-img" />
+                </div>
+                <div class="card-body">
+                    <h3 class="card-name">{{ item.title }}</h3>
+                    <div class="info d-flex">
+                        <h4 class="card-info mt-4">
+                            <p class="text-muted">{{ item.weight }} г</p>
+                            <p>{{ item.price }} р.</p>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-end d-flex flex-row">
+                    <div class="price d-flex flex-row">
+                        <div class="quant">
+                            <button class="quant-button decrease">&minus;</button>
+                            <span class="number">1</span>
+                            <button class="quant-button increase">&plus;</button>
+                        </div>
+                        <div class="button-buy">
+                            <a href="{% url 'add-to-cart' item.id %}" class="btn btn-dark">Заказать</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Состав
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li class="d-flex flex-column">{{ item.description }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'main/js/script.js' %}"></script>
+</body>
+
+</html>
